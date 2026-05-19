@@ -2,9 +2,16 @@ import { useState } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import NavLinks from "./NavLinks";
 import MobileMenu from "./MobileMenu";
+import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { cart } = useCart();
+  const cartCount = cart.reduce(
+  (sum, item) => sum + item.quantity,
+  0
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
@@ -25,13 +32,15 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             
             {/* Cart Icon */}
-            <button className="relative">
-              <ShoppingCart className="w-6 h-6 text-gray-700" />
-              
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-                0
-              </span>
-            </button>
+            <Link to="/cart">
+              <button className="relative">
+                <ShoppingCart className="w-6 h-6 text-gray-700" />
+                
+                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  {cartCount}
+                </span>
+              </button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
