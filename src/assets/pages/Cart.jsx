@@ -25,7 +25,17 @@ const Cart = () => {
         </h1>
 
         {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <div className="text-center py-20">
+  
+            <h2 className="text-3xl font-bold mb-4">
+              Your cart is empty
+            </h2>
+
+            <p className="text-gray-500">
+              Add products to continue shopping.
+            </p>
+
+          </div>
         ) : (
           <>
             <div className="space-y-4">
@@ -63,7 +73,7 @@ const Cart = () => {
                       onClick={() =>
                         decreaseQuantity(item.id)
                       }
-                      className="bg-gray-200 px-3 py-1 rounded"
+                      className="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded"
                     >
                       -
                     </button>
@@ -74,7 +84,7 @@ const Cart = () => {
                       onClick={() =>
                         increaseQuantity(item.id)
                       }
-                      className="bg-gray-200 px-3 py-1 rounded"
+                      className="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded"
                     >
                       +
                     </button>

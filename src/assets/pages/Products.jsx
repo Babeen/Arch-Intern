@@ -5,13 +5,13 @@ import SearchBar from "../components/products/SearchBar";
 import ProductFilters from "../components/products/ProductFilters";
 import LoadingSkeleton from "../components/products/LoadingSkeleton";
 import { getProducts } from "../services/ProductService";
+import { motion } from "framer-motion";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
-
+  const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState("all");
 
@@ -21,7 +21,7 @@ const Products = () => {
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
-        console.log(error);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -51,11 +51,15 @@ const Products = () => {
 
   return (
     <MainLayout>
-      <div className="space-y-8">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-8">
         
         {/* Heading */}
         <div>
-          <h1 className="text-4xl font-bold text-gray-800">
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
             Products
           </h1>
 
@@ -89,7 +93,7 @@ const Products = () => {
         ) : (
           <ProductGrid products={filteredProducts} />
         )}
-      </div>
+      </motion.div>
     </MainLayout>
   );
 };

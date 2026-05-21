@@ -73,13 +73,6 @@ const Navbar = () => {
                     Signup
                   </Button>
                 </Link>
-                <button onClick={toggleTheme}>
-                  {darkMode ? (
-                    <Sun className="w-6 h-6" />
-                  ) : (
-                    <Moon className="w-6 h-6" />
-                  )}
-                </button>
 
               </div>
             )}
@@ -93,6 +86,15 @@ const Navbar = () => {
                 <X className="w-7 h-7" />
               ) : (
                 <Menu className="w-7 h-7" />
+              )}
+            </button>
+
+            {/* Theme Toggle */}
+            <button onClick={toggleTheme}>
+              {darkMode ? (
+                <Sun className="w-6 h-6" />
+              ) : (
+                <Moon className="w-6 h-6" />
               )}
             </button>
 

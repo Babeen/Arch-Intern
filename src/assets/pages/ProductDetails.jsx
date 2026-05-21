@@ -58,11 +58,11 @@ const ProductDetails = () => {
             {product.category}
           </p>
 
-          <h1 className="text-4xl font-bold text-gray-800">
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
             {product.title}
           </h1>
 
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             {product.description}
           </p>
 

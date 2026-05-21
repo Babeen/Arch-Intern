@@ -10,8 +10,8 @@ const ProductFilters = ({
         onClick={() => setSelectedCategory("all")}
         className={`px-4 py-2 rounded-lg ${
           selectedCategory === "all"
-            ? "bg-blue-600 text-white"
-            : "bg-gray-200"
+            ? "bg-blue-600 text-white dark:bg-gray-900"
+            : "bg-gray-200 dark:bg-gray-700"
         }`}
       >
         All
@@ -23,8 +23,8 @@ const ProductFilters = ({
           onClick={() => setSelectedCategory(category)}
           className={`px-4 py-2 rounded-lg capitalize ${
             selectedCategory === category
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200"
+              ? "bg-blue-600 text-white dark:bg-gray-900"
+              : "bg-gray-200 dark:bg-gray-700"
           }`}
         >
           {category}
