@@ -21,7 +21,7 @@ const NavLinks = ({ mobile = false, onClick }) => {
             `font-medium transition duration-300 ${
               isActive
                 ? "text-blue-600"
-                : "text-gray-700 hover:text-blue-500"
+                : "text-gray-700 dark:text-gray-200 hover:text-blue-500"
             }`
           }
         >

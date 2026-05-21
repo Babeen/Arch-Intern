@@ -6,12 +6,12 @@ const ProductCard = ({ product }) => {
   const { addToCart } = useCart(); 
 
   return (
-    <div className="bg-white rounded-2xl shadow hover:shadow-xl transition duration-300 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow hover:shadow-xl transition duration-300 overflow-hidden">
       
       {/* Image + Title wrapped in Link */}
       <Link to={`/products/${product.id}`} className="block cursor-pointer">
         {/* Product Image */}
-        <div className="h-60 bg-white flex items-center justify-center p-6">
+        <div className="h-60 bg-white flex items-center justify-center  dark:bg-gray-900 p-6">
           <img
             src={product.image}
             alt={product.title}
@@ -19,14 +19,14 @@ const ProductCard = ({ product }) => {
           />
         </div>
         {/* Product Title */}
-        <h2 className="font-semibold text-lg line-clamp-2 px-5 pt-2">
+        <h2 className="font-semibold text-lg line-clamp-2  text-gray-800 dark:text-white px-5 pt-2 ">
           {product.title}
         </h2>
       </Link>
 
       {/* Rest of the product info (category, price, button) */}
       <div className="p-5 space-y-4">
-        <p className="text-gray-500 text-sm capitalize">
+        <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">
           {product.category}
         </p>
         <div className="flex items-center justify-between">

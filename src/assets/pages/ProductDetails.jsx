@@ -43,7 +43,7 @@ const ProductDetails = () => {
       <div className="grid lg:grid-cols-2 gap-12">
         
         {/* Image */}
-        <div className="bg-white rounded-2xl p-10 flex items-center justify-center">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-10 flex items-center justify-center">
           <img
             src={product.image}
             alt={product.title}

@@ -33,7 +33,7 @@ const Cart = () => {
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-xl p-6 flex flex-col md:flex-row gap-6 items-center justify-between"
+                  className="bg-white dark:bg-gray-900 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-center justify-between"
                 >
                   
                   {/* Left */}
@@ -95,7 +95,7 @@ const Cart = () => {
             </div>
 
             {/* Total */}
-            <div className="bg-white p-6 rounded-xl">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl">
               
               <h2 className="text-2xl font-bold">
                 Total: ${total.toFixed(2)}
