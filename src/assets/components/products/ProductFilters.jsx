@@ -1,37 +1,19 @@
-const ProductFilters = ({
-  categories,
-  selectedCategory,
-  setSelectedCategory,
-}) => {
-  return (
-    <div className="flex flex-wrap gap-3">
-      
+const ProductFilters = ({ categories, selectedCategory, setSelectedCategory }) => (
+  <div className="flex flex-wrap gap-2">
+    {["all", ...categories].map((cat) => (
       <button
-        onClick={() => setSelectedCategory("all")}
-        className={`px-4 py-2 rounded-lg ${
-          selectedCategory === "all"
-            ? "bg-blue-600 text-white dark:bg-gray-900"
-            : "bg-gray-200 dark:bg-gray-700"
+        key={cat}
+        onClick={() => setSelectedCategory(cat)}
+        className={`px-4 py-2 rounded-full text-sm font-medium capitalize transition-all duration-300 ${
+          selectedCategory === cat
+            ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+            : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-amber-400 hover:text-gray-900"
         }`}
       >
-        All
+        {cat === "all" ? "All" : cat}
       </button>
-
-      {categories.map((category) => (
-        <button
-          key={category}
-          onClick={() => setSelectedCategory(category)}
-          className={`px-4 py-2 rounded-lg capitalize ${
-            selectedCategory === category
-              ? "bg-blue-600 text-white dark:bg-gray-900"
-              : "bg-gray-200 dark:bg-gray-700"
-          }`}
-        >
-          {category}
-        </button>
-      ))}
-    </div>
-  );
-};
+    ))}
+  </div>
+);
 
 export default ProductFilters;

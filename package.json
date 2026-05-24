@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/playfair-display": "^5.2.8",
+    "@fontsource/poppins": "^5.2.7",
     "axios": "^1.16.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.16.0",

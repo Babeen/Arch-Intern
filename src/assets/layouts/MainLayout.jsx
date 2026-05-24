@@ -1,11 +1,10 @@
 import Navbar from "../components/layout/Navbar";
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, transparentNav = false }) => {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
-      <Navbar />
-
-      <main className="max-w-7xl mx-auto px-6 py-10 text-gray-800 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
+      <Navbar transparent={transparentNav} />
+      <main className="text-gray-800 dark:text-white transition-colors duration-300">
         {children}
       </main>
     </div>

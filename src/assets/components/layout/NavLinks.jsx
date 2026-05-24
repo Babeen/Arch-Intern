@@ -5,23 +5,19 @@ const navItems = [
   { name: "Products", path: "/products" },
 ];
 
-const NavLinks = ({ mobile = false, onClick }) => {
+const NavLinks = ({ mobile = false, onClick, transparent = false }) => {
   return (
-    <div
-      className={`flex ${
-        mobile ? "flex-col gap-6" : "items-center gap-8"
-      }`}
-    >
+    <div className={`flex ${mobile ? "flex-col gap-6" : "items-center gap-8"}`}>
       {navItems.map((item) => (
         <NavLink
           key={item.name}
           to={item.path}
           onClick={onClick}
           className={({ isActive }) =>
-            `font-medium transition duration-300 ${
-              isActive
-                ? "text-blue-600"
-                : "text-gray-700 dark:text-gray-200 hover:text-blue-500"
+            `text-sm font-medium transition-colors duration-300 ${
+              transparent
+                ? isActive ? "text-amber-300" : "text-white/80 hover:text-white"
+                : isActive ? "text-amber-500" : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             }`
           }
         >

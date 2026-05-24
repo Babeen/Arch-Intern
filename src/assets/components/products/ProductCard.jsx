@@ -1,47 +1,45 @@
-import Button from "../ui/Button";
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
 import { motion } from "framer-motion";
+import { useCart } from "../../context/CartContext";
 
 const ProductCard = ({ product }) => {
-  const { addToCart } = useCart(); 
+  const { addToCart } = useCart();
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 10 }}
-      transition={{ duration: 0 }}
-      whileHover={{ y: 0, scale: 1.02 }}
-      className="bg-white dark:bg-gray-900 rounded-2xl shadow hover:shadow-xl transition duration-300 overflow-hidden">      
-      {/* Image + Title wrapped in Link */}
-      <Link to={`/products/${product.id}`} className="block cursor-pointer">
-        {/* Product Image */}
-        <div className="h-60 bg-white flex items-center justify-center  dark:bg-gray-900 p-6">
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="group bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full"
+    >
+      <Link to={`/products/${product.id}`} className="block">
+        <div className="relative h-64 overflow-hidden bg-gray-50 dark:bg-gray-800 flex items-center justify-center p-6">
           <img
             src={product.image}
             alt={product.title}
-            className="h-full object-contain"
+            loading="lazy"
+            className="h-full object-contain group-hover:scale-105 transition duration-500"
           />
+          <span className="absolute top-3 left-3 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full capitalize">
+            {product.category}
+          </span>
         </div>
-        {/* Product Title */}
-        <h2 className="font-semibold text-lg line-clamp-2  text-gray-800 dark:text-white px-5 pt-2 ">
-          {product.title}
-        </h2>
       </Link>
 
-      {/* Rest of the product info (category, price, button) */}
-      <div className="p-5 space-y-4">
-        <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">
-          {product.category}
-        </p>
+      <div className="p-5 mt-auto space-y-3">
+        <Link to={`/products/${product.id}`}>
+          <h2 className="font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-amber-500 transition-colors">
+            {product.title}
+          </h2>
+        </Link>
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-blue-600">
-            ${product.price}
-          </span>
-          <Button className="px-4 py-2" onClick={() => addToCart(product)}
+          <span className="text-xl font-bold text-gray-900 dark:text-white">${product.price}</span>
+          <button
+            onClick={() => addToCart(product)}
+            className="text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-1.5 rounded-full hover:bg-amber-400 hover:text-gray-900 transition-all duration-300"
           >
             Add
-          </Button>
+          </button>
         </div>
       </div>
     </motion.div>

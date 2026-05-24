@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Frontend Changes Report</title>
+  <style>
+    body {
+      font-family: 'Calibri', sans-serif;
+      font-size: 11pt;
+      color: #1a1a1a;
+      max-width: 900px;
+      margin: 60px auto;
+      line-height: 1.7;
+    }
+    h1 {
+      font-size: 24pt;
+      color: #111;
+      border-bottom: 3px solid #f59e0b;
+      padding-bottom: 10px;
+      margin-bottom: 6px;
+    }
+    .meta {
+      color: #666;
+      font-size: 10pt;
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-size: 15pt;
+      color: #111;
+      margin-top: 40px;
+      margin-bottom: 4px;
+      border-left: 4px solid #f59e0b;
+      padding-left: 10px;
+    }
+    h3 {
+      font-size: 12pt;
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 4px;
+    }
+    p { margin: 6px 0 10px 0; }
+    ul { margin: 6px 0 12px 20px; }
+    li { margin-bottom: 5px; }
+    code {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 10pt;
+      color: #b45309;
+    }
+    .file-tag {
+      display: inline-block;
+      background: #111;
+      color: #fbbf24;
+      font-family: 'Courier New', monospace;
+      font-size: 9.5pt;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .section-box {
+      background: #fafafa;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .new-badge {
+      display: inline-block;
+      background: #d1fae5;
+      color: #065f46;
+      font-size: 8.5pt;
+      font-weight: bold;
+      padding: 1px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .changed-badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 8.5pt;
+      font-weight: bold;
+      padding: 1px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px 0;
+      font-size: 10.5pt;
+    }
+    th {
+      background: #111;
+      color: #fbbf24;
+      text-align: left;
+      padding: 8px 12px;
+    }
+    td {
+      padding: 7px 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    tr:nth-child(even) td { background: #f9fafb; }
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 36px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Frontend UI — Changes Report</h1>
+  <p class="meta">Project: <strong>Arch-Intern Frontend</strong> &nbsp;|&nbsp; Stack: React + Vite + Tailwind CSS v4 + Framer Motion &nbsp;|&nbsp; Prepared by: Amazon Q</p>
+
+  <!-- ─── OVERVIEW ─── -->
+  <h2>1. Overview</h2>
+  <p>
+    This document covers all UI changes made across three separate sessions:
+  </p>
+  <ul>
+    <li><strong>Session 1:</strong> Home page premium upgrade — full-viewport hero, transparent navbar, Framer Motion animations.</li>
+    <li><strong>Session 2:</strong> Consistent premium theme applied to all pages + new reusable components created.</li>
+    <li><strong>Session 3:</strong> Navbar components updated — all blue colors removed, amber/dark theme applied throughout.</li>
+  </ul>
+  <p>
+    The core design language established is: <strong>dark neutrals (gray-900) as the primary action color, amber-400/500 as the accent, white/light surfaces for cards, and rounded-full pill shapes for all buttons.</strong>
+    Blue was completely removed from the entire codebase.
+  </p>
+
+  <hr class="divider" />
+
+  <!-- ─── SESSION 1 ─── -->
+  <h2>2. Session 1 — Home Page &amp; Layout Overhaul</h2>
+
+  <!-- MainLayout -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/layouts/MainLayout.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Removed the hardcoded <code>max-w-7xl mx-auto px-6 py-10</code> wrapper from <code>&lt;main&gt;</code> so the hero section on the Home page can stretch edge-to-edge (full bleed).</li>
+      <li>Added a <code>transparentNav</code> prop. When passed as <code>true</code>, it forwards a <code>transparent</code> prop to the Navbar, enabling the see-through navbar effect on the Home page.</li>
+      <li>Changed background from <code>bg-gray-100</code> to <code>bg-white</code> for a cleaner base.</li>
+    </ul>
+    <h3>Why</h3>
+    <p>The old layout forced padding on every page, which prevented the hero image from covering the full screen. Decoupling the padding lets each page control its own spacing via <code>PageWrapper</code>.</p>
+  </div>
+
+  <!-- Navbar -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/layout/Navbar.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Changed from <code>sticky</code> to <code>fixed</code> positioning so it overlays the hero image instead of pushing content down.</li>
+      <li>Added a <code>transparent</code> prop and a scroll listener using <code>useEffect</code>. When the user is at the top of the page and <code>transparent=true</code>, the navbar shows as <code>bg-white/10 backdrop-blur-sm</code> (low opacity glass effect). Once the user scrolls past 60px, it transitions to a solid <code>bg-white/95 backdrop-blur-md shadow-md</code>.</li>
+      <li>All text, icons, and buttons dynamically switch color based on the transparent state — white when over the hero, dark when solid.</li>
+      <li><strong>Blue removed:</strong> Logo changed from <code>text-blue-600</code> to <code>text-gray-900 dark:text-white</code>.</li>
+      <li><strong>Blue removed:</strong> Cart badge changed from <code>bg-blue-600 text-white</code> to <code>bg-amber-400 text-gray-900</code>.</li>
+      <li><strong>Blue removed:</strong> Signup button replaced — the old blue <code>Button</code> component was swapped for a plain <code>Link</code> styled as a dark pill with <code>hover:bg-amber-400</code>.</li>
+      <li>Removed the unused <code>Button</code> and <code>Moon/Sun</code> imports.</li>
+    </ul>
+  </div>
+
+  <!-- NavLinks -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/layout/NavLinks.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Added a <code>transparent</code> prop so links know whether they're sitting over the hero image or a solid navbar.</li>
+      <li><strong>Blue removed:</strong> Active link color changed from <code>text-blue-600</code> to <code>text-amber-500</code> (solid nav) or <code>text-amber-300</code> (transparent/hero nav).</li>
+      <li><strong>Blue removed:</strong> Hover color changed from <code>hover:text-blue-500</code> to <code>hover:text-gray-900 dark:hover:text-white</code>.</li>
+      <li>Font size standardized to <code>text-sm</code> for a cleaner, more refined look.</li>
+    </ul>
+  </div>
+
+  <!-- MobileMenu -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/layout/MobileMenu.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Added a <code>border-t border-gray-100 dark:border-white/10</code> separator line that appears when the mobile menu opens, visually separating it from the navbar.</li>
+    </ul>
+  </div>
+
+  <!-- Home -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/Home.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li><strong>Hero image fix:</strong> The background image was previously set via a relative string path in CSS (<code>url('../../assets/images/home.png')</code>) which Vite does not process. It now uses a proper ES module import (<code>import heroBg from "../images/home.png"</code>) so Vite handles it correctly.</li>
+      <li><strong>Full viewport hero:</strong> Changed from <code>min-h-[90vh]</code> to <code>h-screen</code> so the hero covers the entire screen including behind the navbar.</li>
+      <li><strong>Ken Burns animation:</strong> The background image starts slightly zoomed in (<code>scale: 1.12</code>) and animates to <code>scale: 1.02</code> on load using Framer Motion, giving a cinematic feel.</li>
+      <li><strong>Scroll indicator:</strong> Added an animated pulsing vertical line with a "Scroll" label at the bottom of the hero.</li>
+      <li><strong>Typography upgrade:</strong> Hero headline uses a mixed bold + italic weight (<em>"Urban Edge"</em> in light italic) for a premium editorial look.</li>
+      <li><strong>Amber accent labels:</strong> Every section now has a small uppercase amber label above the main heading (e.g., "New Arrivals — SS 2025", "Collections", "Trending").</li>
+      <li><strong>Framer Motion animations:</strong> All sections use <code>whileInView</code> with staggered <code>fadeUp</code> variants so elements animate in as the user scrolls.</li>
+      <li><strong>Blue removed:</strong> Product prices changed from <code>text-blue-600</code> to <code>text-gray-900</code>. All buttons changed to dark pill style with amber hover.</li>
+      <li><strong>Newsletter section:</strong> Replaced the blue gradient background with a dark <code>bg-gray-950</code> card featuring decorative blurred amber and blue blob shapes for depth.</li>
+      <li>Removed the <code>heroLoaded</code> state and <code>useEffect</code> preloader — no longer needed since the image is imported directly.</li>
+    </ul>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── SESSION 2 ─── -->
+  <h2>3. Session 2 — Reusable Components &amp; Theme Consistency</h2>
+
+  <!-- New components -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/ui/SectionHeader.jsx</span> <span class="new-badge">NEW</span>
+    <h3>What it does</h3>
+    <p>A reusable heading component that renders an optional small amber uppercase label, a large bold title, and an optional subtitle. Used on the Products and Cart pages to keep section headings consistent without repeating the same markup.</p>
+    <h3>Props</h3>
+    <table>
+      <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>label</code></td><td>string</td><td>Small amber uppercase text above the title (optional)</td></tr>
+      <tr><td><code>title</code></td><td>string</td><td>Main bold heading</td></tr>
+      <tr><td><code>subtitle</code></td><td>string</td><td>Smaller gray text below the title (optional)</td></tr>
+      <tr><td><code>center</code></td><td>boolean</td><td>Centers all text when true (optional)</td></tr>
+    </table>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/ui/FormField.jsx</span> <span class="new-badge">NEW</span>
+    <h3>What it does</h3>
+    <p>A reusable input field that includes consistent dark-theme styling and an inline error message below the input. Replaces the repeated <code>&lt;div&gt; + &lt;input&gt; + &lt;p&gt;</code> pattern in Login and Signup.</p>
+    <h3>Props</h3>
+    <table>
+      <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>error</code></td><td>string</td><td>Error message to display below the input (optional)</td></tr>
+      <tr><td><code>...props</code></td><td>any</td><td>All standard HTML input attributes (type, placeholder, etc.) passed through</td></tr>
+    </table>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/ui/PageWrapper.jsx</span> <span class="new-badge">NEW</span>
+    <h3>What it does</h3>
+    <p>A reusable layout wrapper that applies consistent <code>max-w-7xl</code> centering, horizontal padding, vertical padding, and a Framer Motion fade-up entrance animation. Every inner page (Products, ProductDetails, Cart) uses this instead of repeating the same container classes.</p>
+    <h3>Props</h3>
+    <table>
+      <tr><th>Prop</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>children</code></td><td>ReactNode</td><td>Page content</td></tr>
+      <tr><td><code>className</code></td><td>string</td><td>Additional Tailwind classes (optional)</td></tr>
+    </table>
+  </div>
+
+  <!-- Pages updated -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/Products.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Replaced the manual <code>motion.div</code> wrapper with <code>PageWrapper</code>.</li>
+      <li>Added <code>SectionHeader</code> with label "Catalogue" and title "All Products".</li>
+      <li>Simplified the <code>useEffect</code> to a chained <code>.then().catch().finally()</code> for cleaner async handling.</li>
+      <li>Added an inline error message display if the API call fails.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/ProductDetails.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Replaced the plain "Loading..." text with a full animated skeleton that mirrors the actual page layout (image placeholder + text lines).</li>
+      <li>Added slide-in animations — image slides in from the left, info slides in from the right using Framer Motion.</li>
+      <li><strong>Blue removed:</strong> Category label changed from <code>text-blue-600</code> to <code>text-amber-500</code>.</li>
+      <li><strong>Blue removed:</strong> Price changed from <code>text-blue-600</code> to <code>text-gray-900 dark:text-white</code>.</li>
+      <li>Add to Cart button replaced with a dark pill button with a <code>ShoppingBag</code> icon and amber hover.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/Cart.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Added <code>SectionHeader</code> with label "Your Bag".</li>
+      <li><strong>Empty state upgrade:</strong> Added a large <code>ShoppingBag</code> icon and a "Browse Products" CTA button instead of plain text.</li>
+      <li><strong>Layout upgrade:</strong> Changed from a single column to a two-column layout on large screens — cart items on the left (2/3 width), Order Summary panel on the right (1/3 width).</li>
+      <li><strong>Order Summary panel:</strong> Shows subtotal, a "Free" shipping line, a total, and a Checkout button — all previously missing.</li>
+      <li>Quantity +/− buttons changed to circular pill buttons with amber hover.</li>
+      <li>Remove button changed from red text to a <code>Trash2</code> icon that turns red on hover.</li>
+      <li><strong>Blue removed:</strong> Price changed from <code>text-blue-600</code> to <code>text-amber-500</code>.</li>
+      <li>Staggered Framer Motion animations added to cart items as they appear.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/Login.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Replaced raw <code>&lt;input&gt;</code> elements with the new <code>FormField</code> component.</li>
+      <li>Added an amber label "Welcome back" above the heading.</li>
+      <li>Submit button changed to a dark pill with amber hover, consistent with all other CTAs.</li>
+      <li>Added a "Don't have an account? Create one" link at the bottom pointing to <code>/signup</code>.</li>
+      <li>Card border added: <code>border border-gray-100 dark:border-white/10</code> for subtle definition.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/pages/Signup.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Same treatment as Login — <code>FormField</code> used for all inputs.</li>
+      <li>Added amber label "Get started" above the heading.</li>
+      <li>Submit button changed to dark pill with amber hover.</li>
+      <li>Added an "Already have an account? Sign in" link pointing to <code>/login</code>.</li>
+    </ul>
+  </div>
+
+  <!-- Product components -->
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/products/ProductCard.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Removed the old <code>Button</code> component dependency — Add button is now a plain styled button.</li>
+      <li><strong>Blue removed:</strong> Price changed from <code>text-blue-600</code> to <code>text-gray-900 dark:text-white</code>.</li>
+      <li>Add button changed to dark pill with amber hover.</li>
+      <li>Category label moved to an overlay badge on the image (top-left) instead of plain text below.</li>
+      <li>Product title now has <code>hover:text-amber-500</code> on hover.</li>
+      <li>Fixed the broken animation — old code had <code>animate={{ y: 10 }}</code> which was incorrect; now properly animates to <code>y: 0</code>.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/products/SearchBar.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Added a <code>Search</code> icon from lucide-react inside the input on the left side.</li>
+      <li>Shape changed from <code>rounded-xl</code> to <code>rounded-full</code> for consistency with the pill button theme.</li>
+      <li><strong>Blue removed:</strong> Focus ring changed from <code>focus:ring-blue-500</code> to <code>focus:border-amber-400</code>.</li>
+      <li>Added dark mode support: <code>dark:bg-gray-900 dark:border-gray-700 dark:text-white</code>.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/products/ProductFilters.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>The filter buttons were entirely commented out in the original code — they are now fully implemented and visible.</li>
+      <li>Renders an "All" button plus one button per category, all as pill-shaped buttons.</li>
+      <li><strong>Blue removed:</strong> Active filter changed from <code>bg-blue-600</code> to <code>bg-gray-900 dark:bg-white</code>.</li>
+      <li>Inactive filters have <code>hover:bg-amber-400 hover:text-gray-900</code> on hover.</li>
+    </ul>
+  </div>
+
+  <div class="section-box">
+    <span class="file-tag">src/assets/components/products/LoadingSkeleton.jsx</span> <span class="changed-badge">CHANGED</span>
+    <h3>What changed</h3>
+    <ul>
+      <li>Updated to match the new card shape — <code>rounded-2xl</code> instead of <code>rounded-xl</code>.</li>
+      <li>Added dark mode support: <code>dark:bg-gray-900</code> card background, <code>dark:bg-gray-800</code> skeleton lines.</li>
+      <li>Skeleton lines changed to <code>rounded-full</code> pill shapes to match the overall aesthetic.</li>
+    </ul>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── DESIGN SYSTEM ─── -->
+  <h2>4. Design System Reference</h2>
+  <p>The following rules are now consistent across every component and page:</p>
+
+  <table>
+    <tr><th>Element</th><th>Class / Value</th></tr>
+    <tr><td>Primary button (solid)</td><td><code>bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full hover:bg-amber-400 hover:text-gray-900</code></td></tr>
+    <tr><td>Primary button (outline / ghost)</td><td><code>border border-white/60 text-white rounded-full hover:bg-white/10</code></td></tr>
+    <tr><td>Accent color</td><td><code>text-amber-500</code> / <code>bg-amber-400</code></td></tr>
+    <tr><td>Section label</td><td><code>text-xs uppercase tracking-[0.25em] text-amber-500 font-semibold</code></td></tr>
+    <tr><td>Page heading</td><td><code>text-4xl md:text-5xl font-bold text-gray-900 dark:text-white</code></td></tr>
+    <tr><td>Card</td><td><code>bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500</code></td></tr>
+    <tr><td>Input focus ring</td><td><code>focus:border-amber-400</code> (no blue ring)</td></tr>
+    <tr><td>Active nav link</td><td><code>text-amber-500</code> (solid) / <code>text-amber-300</code> (transparent hero)</td></tr>
+    <tr><td>Cart badge</td><td><code>bg-amber-400 text-gray-900</code></td></tr>
+    <tr><td>Price text</td><td><code>text-gray-900 dark:text-white font-bold</code> (no blue)</td></tr>
+    <tr><td>Page entrance animation</td><td>Framer Motion: <code>opacity 0→1, y 24→0, duration 0.5s</code></td></tr>
+    <tr><td>Section scroll animation</td><td>Framer Motion: <code>whileInView fadeUp</code> with staggered delays</td></tr>
+  </table>
+
+  <hr class="divider" />
+
+  <!-- ─── FILE SUMMARY ─── -->
+  <h2>5. File Change Summary</h2>
+  <table>
+    <tr><th>File</th><th>Status</th><th>Key Reason</th></tr>
+    <tr><td><code>layouts/MainLayout.jsx</code></td><td>Changed</td><td>Full-bleed layout + transparent nav prop</td></tr>
+    <tr><td><code>layout/Navbar.jsx</code></td><td>Changed</td><td>Fixed positioning, scroll-aware transparency, blue removed</td></tr>
+    <tr><td><code>layout/NavLinks.jsx</code></td><td>Changed</td><td>Blue active/hover colors replaced with amber</td></tr>
+    <tr><td><code>layout/MobileMenu.jsx</code></td><td>Changed</td><td>Added separator border on open</td></tr>
+    <tr><td><code>pages/Home.jsx</code></td><td>Changed</td><td>Full premium overhaul — hero, animations, theme</td></tr>
+    <tr><td><code>pages/Products.jsx</code></td><td>Changed</td><td>PageWrapper, SectionHeader, cleaner async</td></tr>
+    <tr><td><code>pages/ProductDetails.jsx</code></td><td>Changed</td><td>Skeleton loader, slide animations, blue removed</td></tr>
+    <tr><td><code>pages/Cart.jsx</code></td><td>Changed</td><td>Order summary panel, empty state, blue removed</td></tr>
+    <tr><td><code>pages/Login.jsx</code></td><td>Changed</td><td>FormField, amber theme, cross-link to Signup</td></tr>
+    <tr><td><code>pages/Signup.jsx</code></td><td>Changed</td><td>FormField, amber theme, cross-link to Login</td></tr>
+    <tr><td><code>components/ui/SectionHeader.jsx</code></td><td>New</td><td>Reusable amber-label + title heading</td></tr>
+    <tr><td><code>components/ui/FormField.jsx</code></td><td>New</td><td>Reusable input with error message</td></tr>
+    <tr><td><code>components/ui/PageWrapper.jsx</code></td><td>New</td><td>Reusable page container with fade animation</td></tr>
+    <tr><td><code>components/products/ProductCard.jsx</code></td><td>Changed</td><td>Blue removed, category badge, fixed animation</td></tr>
+    <tr><td><code>components/products/SearchBar.jsx</code></td><td>Changed</td><td>Search icon, pill shape, blue removed</td></tr>
+    <tr><td><code>components/products/ProductFilters.jsx</code></td><td>Changed</td><td>Uncommented + fully implemented with amber theme</td></tr>
+    <tr><td><code>components/products/LoadingSkeleton.jsx</code></td><td>Changed</td><td>Dark mode support, updated shape</td></tr>
+  </table>
+
+  <hr class="divider" />
+  <p style="color:#999; font-size:9.5pt; text-align:center;">Generated by Amazon Q &nbsp;|&nbsp; Arch-Intern Frontend Project</p>
+
+</body>
+</html>

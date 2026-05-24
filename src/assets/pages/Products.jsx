@@ -4,78 +4,39 @@ import ProductGrid from "../components/products/ProductGrid";
 import SearchBar from "../components/products/SearchBar";
 import ProductFilters from "../components/products/ProductFilters";
 import LoadingSkeleton from "../components/products/LoadingSkeleton";
+import SectionHeader from "../components/ui/SectionHeader";
+import PageWrapper from "../components/ui/PageWrapper";
 import { getProducts } from "../services/ProductService";
-import { motion } from "framer-motion";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
-  const [selectedCategory, setSelectedCategory] =
-    useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    getProducts()
+      .then(setProducts)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Categories
-  const categories = [
-    ...new Set(products.map((item) => item.category)),
-  ];
+  const categories = [...new Set(products.map((p) => p.category))];
 
-  // Filtered Products
-  const filteredProducts = products.filter((product) => {
-    
-    const matchesSearch = product.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "all" ||
-      product.category === selectedCategory;
-
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
     <MainLayout>
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="space-y-8">
-        
-        {/* Heading */}
-        <div>
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
-            Products
-          </h1>
+      <PageWrapper className="space-y-10">
+        <SectionHeader label="Catalogue" title="All Products" subtitle="Browse our latest collection" />
 
-          <p className="text-gray-500 mt-2">
-            Browse our latest products
-          </p>
-        </div>
-
-        {/* Search + Filters */}
-        <div className="flex flex-col lg:flex-row gap-6 lg:items-center lg:justify-between">
-          
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-          />
-
+        <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+          <SearchBar search={search} setSearch={setSearch} />
           <ProductFilters
             categories={categories}
             selectedCategory={selectedCategory}
@@ -83,17 +44,16 @@ const Products = () => {
           />
         </div>
 
-        {/* Products */}
+        {error && <p className="text-red-400">{error}</p>}
+
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, index) => (
-              <LoadingSkeleton key={index} />
-            ))}
+            {[...Array(6)].map((_, i) => <LoadingSkeleton key={i} />)}
           </div>
         ) : (
           <ProductGrid products={filteredProducts} />
         )}
-      </motion.div>
+      </PageWrapper>
     </MainLayout>
   );
 };
