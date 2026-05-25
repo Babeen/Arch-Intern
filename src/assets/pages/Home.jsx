@@ -1,19 +1,14 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import MainLayout from "../layouts/MainLayout";
-import Button from "../components/ui/Button";
 import heroBg from "../images/home.png";
+import { getProducts } from "../services/ProductService";
+import { useCart } from "../context/CartContext";
 import {
   ShoppingBag, Truck, ShieldCheck, RefreshCw,
-  Star, ArrowRight, ArrowUpRight,
+  ArrowRight, ArrowUpRight,
 } from "lucide-react";
-
-const featuredProducts = [
-  { id: 1, title: "Oversized Denim Jacket", price: 89.99, image: "https://placehold.co/600x800/1a1a1a/white?text=Denim+Jacket", category: "Outerwear" },
-  { id: 2, title: "Merino Wool Sweater", price: 69.99, image: "https://placehold.co/600x800/2a2a2a/white?text=Wool+Sweater", category: "Knits" },
-  { id: 3, title: "Tailored Trousers", price: 79.99, image: "https://placehold.co/600x800/3a3a3a/white?text=Trousers", category: "Bottoms" },
-  { id: 4, title: "Leather Chelsea Boots", price: 149.99, image: "https://placehold.co/600x800/4a4a4a/white?text=Chelsea+Boots", category: "Footwear" },
-];
 
 const features = [
   { icon: Truck, label: "Free Worldwide Shipping" },
@@ -22,14 +17,23 @@ const features = [
   { icon: ShoppingBag, label: "Secure Checkout" },
 ];
 
-const categories = ["Men's Clothing", "Women's Clothing", "Accessories", "Footwear"];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" } }),
 };
 
-const Home = () => (
+const Home = () => {
+  const [products, setProducts] = useState([]);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    getProducts().then(setProducts).catch(console.error);
+  }, []);
+
+  const featuredProducts = products.slice(0, 4);
+  const categories = [...new Set(products.map((p) => p.category))];
+
+  return (
   <MainLayout transparentNav>
     {/* ── Hero ── */}
     <section className="relative h-screen flex items-center justify-center text-center overflow-hidden">
@@ -130,30 +134,37 @@ const Home = () => (
       </motion.div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-        {categories.map((cat, i) => (
-          <motion.div
-            key={cat}
-            variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.5}
-          >
-            <Link
-              to={`/products?category=${cat.toLowerCase()}`}
-              className="group relative overflow-hidden rounded-2xl aspect-[3/4] block bg-gray-100 dark:bg-gray-800"
+        {categories.map((cat, i) => {
+          const sample = products.find((p) => p.category === cat);
+          return (
+            <motion.div
+              key={cat}
+              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.5}
             >
-              <img
-                src={`https://placehold.co/600x800/111827/white?text=${encodeURIComponent(cat)}`}
-                alt={cat}
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                <h3 className="font-bold text-lg leading-tight">{cat}</h3>
-                <span className="flex items-center gap-1 text-sm text-white/70 mt-1 group-hover:text-amber-300 transition-colors">
-                  Shop Now <ArrowUpRight className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
+              <Link
+                to={`/products?category=${encodeURIComponent(cat)}`}
+                className="group relative overflow-hidden rounded-2xl aspect-[3/4] block bg-gray-100 dark:bg-gray-800"
+              >
+                {sample ? (
+                  <img
+                    src={sample.image}
+                    alt={cat}
+                    className="w-full h-full object-contain p-6 group-hover:scale-110 transition duration-700 ease-out bg-white dark:bg-gray-900"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 dark:bg-gray-800" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                  <h3 className="font-bold text-lg leading-tight capitalize">{cat}</h3>
+                  <span className="flex items-center gap-1 text-sm text-white/70 mt-1 group-hover:text-amber-300 transition-colors">
+                    Shop Now <ArrowUpRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
     </section>
 
@@ -181,29 +192,20 @@ const Home = () => (
               variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.15}
             >
               <Link to={`/products/${product.id}`} className="block">
-                <div className="relative pt-[125%] overflow-hidden bg-gray-100 dark:bg-gray-800">
+                <div className="relative pt-[100%] overflow-hidden bg-gray-50 dark:bg-gray-800">
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition duration-700"
+                    className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition duration-700"
                   />
-                  <button
-                    onClick={(e) => e.preventDefault()}
-                    className="absolute top-3 right-3 bg-white/90 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-amber-300"
-                  >
-                    <Star className="h-4 w-4 text-gray-700" />
-                  </button>
-                  <span className="absolute top-3 left-3 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full">
+                  <span className="absolute top-3 left-3 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full capitalize">
                     {product.category}
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-800 dark:text-white line-clamp-1">{product.title}</h3>
+                  <h3 className="font-semibold text-gray-800 dark:text-white line-clamp-1 text-sm">{product.title}</h3>
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">${product.price}</span>
-                    <button className="text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-1.5 rounded-full hover:bg-amber-400 hover:text-gray-900 transition-all duration-300">
-                      Add
-                    </button>
+                    <span className="text-lg font-bold text-amber-500 dark:text-white">${product.price}</span>
                   </div>
                 </div>
               </Link>
@@ -221,7 +223,7 @@ const Home = () => (
       >
         {/* Decorative blobs */}
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-amber-400/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-amber-300/20 rounded-full blur-3xl pointer-events-none" />
 
         <p className="text-xs uppercase tracking-[0.25em] text-amber-400 font-semibold mb-3">Exclusive Access</p>
         <h2 className="text-3xl md:text-4xl font-bold">Join the Inner Circle</h2>
@@ -247,6 +249,7 @@ const Home = () => (
       </motion.div>
     </section>
   </MainLayout>
-);
+  );
+};
 
 export default Home;

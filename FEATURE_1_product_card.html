@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feature 1 — Product Card Improvements</title>
+  <style>
+    body { font-family: 'Calibri', sans-serif; font-size: 11pt; color: #1a1a1a; max-width: 960px; margin: 60px auto; line-height: 1.8; }
+    h1 { font-size: 24pt; border-bottom: 3px solid #f59e0b; padding-bottom: 10px; margin-bottom: 4px; }
+    .meta { color: #888; font-size: 10pt; margin-bottom: 40px; }
+    h2 { font-size: 15pt; margin-top: 48px; border-left: 4px solid #f59e0b; padding-left: 12px; }
+    h3 { font-size: 12pt; color: #333; margin-top: 24px; margin-bottom: 6px; }
+    p { margin: 6px 0 12px; }
+    ul, ol { margin: 6px 0 14px 22px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px;
+      padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 10pt; color: #b45309;
+    }
+    pre {
+      background: #111827; color: #e5e7eb; border-radius: 10px;
+      padding: 18px 20px; font-family: 'Courier New', monospace; font-size: 9.5pt;
+      line-height: 1.7; overflow-x: auto; margin: 12px 0 20px;
+    }
+    pre .comment { color: #6b7280; }
+    pre .keyword { color: #f59e0b; }
+    pre .string { color: #86efac; }
+    pre .fn { color: #93c5fd; }
+    .file-tag { display: inline-block; background: #111; color: #fbbf24; font-family: 'Courier New', monospace; font-size: 9.5pt; padding: 2px 12px; border-radius: 20px; margin-bottom: 10px; }
+    .concept-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 16px 20px; margin: 16px 0 24px; }
+    .concept-box strong { color: #92400e; }
+    .tip-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; margin: 14px 0; }
+    .tip-box strong { color: #166534; }
+    .warn-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px; padding: 14px 18px; margin: 14px 0; }
+    .warn-box strong { color: #9f1239; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 10.5pt; }
+    th { background: #111; color: #fbbf24; text-align: left; padding: 8px 14px; }
+    td { padding: 8px 14px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+    tr:nth-child(even) td { background: #f9fafb; }
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 44px 0; }
+    .step-num { display: inline-block; background: #f59e0b; color: #111; font-weight: bold; width: 26px; height: 26px; border-radius: 50%; text-align: center; line-height: 26px; margin-right: 8px; font-size: 10pt; }
+  </style>
+</head>
+<body>
+
+<h1>Feature 1 — Product Card Improvements</h1>
+<p class="meta">Files changed: <strong>ProductCard.jsx</strong> (updated) &nbsp;|&nbsp; <strong>QuickViewModal.jsx</strong> (new) &nbsp;|&nbsp; Concepts: useState, useEffect, AnimatePresence, event bubbling, CSS group-hover</p>
+
+<!-- ============================================================ -->
+<h2>Overview — What We Built</h2>
+
+<p>We added three improvements to every product card:</p>
+<ol>
+  <li><strong>Quick View Modal</strong> — a popup that shows product details without leaving the page</li>
+  <li><strong>Image Hover Swap</strong> — a second image fades in when the user hovers over the card</li>
+  <li><strong>Size Selector Pills</strong> — S / M / L / XL buttons on the card itself</li>
+</ol>
+
+<p>These are standard features on every major fashion e-commerce site (Zara, ASOS, Adidas). They reduce friction — the user gets more information without having to navigate away and come back.</p>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 1 — Concept: useState</h2>
+
+<p><code>useState</code> is a React Hook that lets a component remember a value between renders. Every time the value changes, React re-renders the component to show the updated UI.</p>
+
+<h3>Syntax</h3>
+<pre>
+<span class="keyword">const</span> [value, setValue] = <span class="fn">useState</span>(initialValue);
+</pre>
+
+<ul>
+  <li><code>value</code> — the current value you can read</li>
+  <li><code>setValue</code> — the function you call to change it</li>
+  <li><code>initialValue</code> — what the value starts as (false, null, "", 0, etc.)</li>
+</ul>
+
+<h3>How we use it in ProductCard</h3>
+<pre>
+<span class="comment">// Controls whether the Quick View modal is open or closed</span>
+<span class="keyword">const</span> [showModal, setShowModal] = <span class="fn">useState</span>(<span class="keyword">false</span>);
+
+<span class="comment">// Tracks which size pill the user clicked (null = none selected)</span>
+<span class="keyword">const</span> [selectedSize, setSelectedSize] = <span class="fn">useState</span>(<span class="keyword">null</span>);
+</pre>
+
+<div class="concept-box">
+  <strong>Mental model:</strong> Think of useState like a light switch. The switch has a current position (on/off = true/false). You can read the position (<code>showModal</code>) and you can flip it (<code>setShowModal(true)</code>). Every time you flip it, React re-draws the component.
+</div>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 2 — Concept: Event Bubbling & stopPropagation</h2>
+
+<p>This is one of the most important JavaScript concepts for building interactive UIs.</p>
+
+<h3>What is event bubbling?</h3>
+<p>When you click an element, the click event doesn't just fire on that element — it "bubbles up" through every parent element all the way to the top of the page. Each parent's onClick also fires.</p>
+
+<pre>
+<span class="comment">// Imagine this structure:</span>
+&lt;div onClick={() =&gt; console.log("DIV clicked")}&gt;
+  &lt;button onClick={() =&gt; console.log("BUTTON clicked")}&gt;
+    Click me
+  &lt;/button&gt;
+&lt;/div&gt;
+
+<span class="comment">// When you click the button, BOTH fire:</span>
+<span class="comment">// → "BUTTON clicked"</span>
+<span class="comment">// → "DIV clicked"   ← this is bubbling</span>
+</pre>
+
+<h3>Why this matters in our card</h3>
+<p>The product card has a <code>&lt;Link&gt;</code> wrapping the image area. If we put a "Quick View" button inside that area, clicking Quick View would ALSO trigger the Link and navigate to the product page — not what we want.</p>
+
+<pre>
+<span class="comment">// Without stopPropagation — clicking Quick View navigates away (BAD)</span>
+&lt;button onClick={() =&gt; setShowModal(true)}&gt;Quick View&lt;/button&gt;
+
+<span class="comment">// With stopPropagation — click stays on the button only (GOOD)</span>
+&lt;button onClick={(e) =&gt; {
+  e.<span class="fn">stopPropagation</span>(); <span class="comment">// stop the click from reaching the Link</span>
+  <span class="fn">setShowModal</span>(<span class="keyword">true</span>);
+}}&gt;Quick View&lt;/button&gt;
+</pre>
+
+<div class="warn-box">
+  <strong>Common mistake:</strong> Forgetting stopPropagation on buttons inside links or cards. The symptom is: clicking a button also triggers an unintended navigation or parent click handler.
+</div>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 3 — Concept: CSS group / group-hover (Tailwind)</h2>
+
+<p>Tailwind's <code>group</code> utility lets child elements respond to their parent's hover state. This is how we show the Quick View button only when the card is hovered.</p>
+
+<h3>How it works</h3>
+<pre>
+<span class="comment">// Step 1: Add `group` to the PARENT element</span>
+&lt;div className="<span class="string">group</span> bg-white rounded-2xl"&gt;
+
+  <span class="comment">// Step 2: Use `group-hover:` on any CHILD element</span>
+  &lt;button className="<span class="string">opacity-0 group-hover:opacity-100</span> transition"&gt;
+    Quick View
+  &lt;/button&gt;
+
+&lt;/div&gt;
+
+<span class="comment">// Result: button is invisible normally, visible when the div is hovered</span>
+</pre>
+
+<h3>The "reveal from below" effect on Quick View button</h3>
+<pre>
+className="
+  opacity-0 translate-y-2        <span class="comment">← default: invisible, 8px below</span>
+  group-hover:opacity-100        <span class="comment">← on hover: visible</span>
+  group-hover:translate-y-0      <span class="comment">← on hover: moves to normal position</span>
+  transition-all duration-300    <span class="comment">← smooth animation between states</span>
+"
+</pre>
+
+<div class="concept-box">
+  <strong>Mental model:</strong> <code>group</code> is like a "zone". Any element inside the zone can say "when the zone is hovered, change me". Without <code>group</code>, a child element can only react to being hovered itself, not its parent.
+</div>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 4 — Image Hover Swap</h2>
+
+<span class="file-tag">ProductCard.jsx — Image Area</span>
+
+<h3>How it works</h3>
+<p>Both images are placed in the same container using <code>absolute</code> positioning — they stack on top of each other. The primary image is visible by default. The hover image is invisible (<code>opacity-0</code>) and slightly scaled down (<code>scale-95</code>). On hover, they swap.</p>
+
+<pre>
+<span class="comment">// Container — `relative` so children can use `absolute`</span>
+&lt;div className="<span class="string">relative h-64 overflow-hidden</span>"&gt;
+
+  <span class="comment">// Image 1 (primary) — visible, fades OUT on hover</span>
+  &lt;img className="<span class="string">absolute opacity-100 scale-100
+                   group-hover:opacity-0 group-hover:scale-95
+                   transition-all duration-700</span>" /&gt;
+
+  <span class="comment">// Image 2 (hover) — invisible, fades IN on hover</span>
+  &lt;img className="<span class="string">absolute opacity-0 scale-95
+                   group-hover:opacity-100 group-hover:scale-100
+                   transition-all duration-700</span>" /&gt;
+
+&lt;/div&gt;
+</pre>
+
+<div class="tip-box">
+  <strong>Real project note:</strong> The Fake Store API only provides one image per product. We simulate the second image by appending <code>?v=2</code> to the URL (which loads the same image — just to show the mechanism works). In a real backend, you'd store multiple images per product and use <code>product.images[1]</code> here.
+</div>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 5 — Size Selector Pills</h2>
+
+<span class="file-tag">ProductCard.jsx — Size Pills</span>
+
+<h3>How it works</h3>
+<p>We define a <code>SIZES</code> array outside the component (so it's not recreated on every render). We map over it to render a button for each size. The selected size gets a dark filled style; others get a bordered style.</p>
+
+<pre>
+<span class="comment">// Defined OUTSIDE the component — constant, never changes</span>
+<span class="keyword">const</span> SIZES = [<span class="string">"S"</span>, <span class="string">"M"</span>, <span class="string">"L"</span>, <span class="string">"XL"</span>];
+
+<span class="comment">// Inside the component:</span>
+{SIZES.<span class="fn">map</span>((size) =&gt; (
+  &lt;button
+    key={size}
+    onClick={(e) =&gt; {
+      e.<span class="fn">preventDefault</span>();   <span class="comment">// don't follow any link</span>
+      e.<span class="fn">stopPropagation</span>(); <span class="comment">// don't bubble to parent</span>
+      <span class="comment">// Toggle: clicking the same size again deselects it</span>
+      <span class="fn">setSelectedSize</span>(selectedSize === size ? <span class="keyword">null</span> : size);
+    }}
+    className={selectedSize === size ? <span class="string">"bg-gray-900 text-white"</span> : <span class="string">"border text-gray-500"</span>}
+  &gt;
+    {size}
+  &lt;/button&gt;
+))}
+</pre>
+
+<div class="concept-box">
+  <strong>Why e.preventDefault()?</strong> If a size button is inside a <code>&lt;Link&gt;</code> or <code>&lt;form&gt;</code>, the default browser behavior would navigate or submit. <code>preventDefault()</code> cancels that default behavior. <code>stopPropagation()</code> stops the event from reaching parent elements. They do different things — you often need both.
+</div>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 6 — QuickViewModal Deep Dive</h2>
+
+<span class="file-tag">QuickViewModal.jsx</span>
+
+<h3>Structure of the modal</h3>
+<pre>
+&lt;motion.div&gt;  <span class="comment">← Backdrop (covers full screen, click to close)</span>
+  &lt;div /&gt;     <span class="comment">← Dark overlay (visual darkening)</span>
+  &lt;motion.div&gt; <span class="comment">← Modal card (the actual popup content)</span>
+    &lt;button /&gt; <span class="comment">← X close button</span>
+    &lt;img /&gt;    <span class="comment">← Product image</span>
+    &lt;div&gt;      <span class="comment">← Product info (title, price, sizes, buttons)</span>
+  &lt;/motion.div&gt;
+&lt;/motion.div&gt;
+</pre>
+
+<h3>Concept: useEffect for side effects</h3>
+<p>A "side effect" is anything that affects something outside the component — like adding an event listener, changing the document title, or modifying <code>document.body</code>.</p>
+
+<pre>
+<span class="comment">// Side effect 1: Close modal when Escape key is pressed</span>
+<span class="fn">useEffect</span>(() =&gt; {
+  <span class="keyword">const</span> handleKey = (e) =&gt; {
+    <span class="keyword">if</span> (e.key === <span class="string">"Escape"</span>) <span class="fn">onClose</span>();
+  };
+
+  window.<span class="fn">addEventListener</span>(<span class="string">"keydown"</span>, handleKey);
+
+  <span class="comment">// CLEANUP FUNCTION — runs when the component is removed from the DOM</span>
+  <span class="comment">// Without this, the listener keeps running even after the modal closes</span>
+  <span class="keyword">return</span> () =&gt; window.<span class="fn">removeEventListener</span>(<span class="string">"keydown"</span>, handleKey);
+
+}, [onClose]); <span class="comment">// dependency array — re-runs if onClose changes</span>
+
+
+<span class="comment">// Side effect 2: Prevent background scroll while modal is open</span>
+<span class="fn">useEffect</span>(() =&gt; {
+  document.body.style.overflow = <span class="string">"hidden"</span>; <span class="comment">// lock scroll</span>
+  <span class="keyword">return</span> () =&gt; { document.body.style.overflow = <span class="string">""</span>; }; <span class="comment">// restore on close</span>
+}, []);
+</pre>
+
+<div class="concept-box">
+  <strong>The dependency array [ ]</strong><br/>
+  The second argument to useEffect controls WHEN it re-runs:<br/>
+  <code>useEffect(fn, [])</code> — runs once when the component mounts (appears)<br/>
+  <code>useEffect(fn, [value])</code> — runs when <code>value</code> changes<br/>
+  <code>useEffect(fn)</code> — runs after every render (usually not what you want)
+</div>
+
+<h3>Concept: AnimatePresence</h3>
+<p>React normally removes elements from the DOM instantly when a condition becomes false. Framer Motion's <code>AnimatePresence</code> intercepts this removal and lets the element play its <code>exit</code> animation first.</p>
+
+<pre>
+<span class="comment">// In ProductCard.jsx:</span>
+&lt;AnimatePresence&gt;
+  {showModal &amp;&amp; (
+    &lt;QuickViewModal
+      key=<span class="string">"quick-view"</span>   <span class="comment">← key tells AnimatePresence which element this is</span>
+      product={product}
+      onClose={() =&gt; <span class="fn">setShowModal</span>(<span class="keyword">false</span>)}
+    /&gt;
+  )}
+&lt;/AnimatePresence&gt;
+
+<span class="comment">// In QuickViewModal.jsx — the exit animation:</span>
+&lt;motion.div
+  initial={{ opacity: 0, scale: 0.95, y: 20 }}  <span class="comment">← starting state</span>
+  animate={{ opacity: 1, scale: 1, y: 0 }}       <span class="comment">← visible state</span>
+  exit={{ opacity: 0, scale: 0.95, y: 20 }}      <span class="comment">← exit state (plays before removal)</span>
+/&gt;
+</pre>
+
+<div class="tip-box">
+  <strong>Why does the modal need a key prop?</strong> AnimatePresence uses the <code>key</code> to identify which child is entering/exiting. Without it, it may not detect the change correctly. Always give a unique key to direct children of AnimatePresence.
+</div>
+
+<h3>The "Added to Cart!" feedback</h3>
+<pre>
+<span class="keyword">const</span> [added, setAdded] = <span class="fn">useState</span>(<span class="keyword">false</span>);
+
+<span class="keyword">const</span> handleAdd = () =&gt; {
+  <span class="fn">addToCart</span>({ ...product, size: selectedSize });
+  <span class="fn">setAdded</span>(<span class="keyword">true</span>);
+  <span class="fn">setTimeout</span>(() =&gt; <span class="fn">setAdded</span>(<span class="keyword">false</span>), 1500); <span class="comment">// reset after 1.5 seconds</span>
+};
+
+<span class="comment">// In JSX — button text and color change based on `added`:</span>
+className={added ? <span class="string">"bg-green-500"</span> : <span class="string">"bg-gray-900 hover:bg-amber-400"</span>}
+{added ? <span class="string">"Added to Cart!"</span> : <span class="string">"Add to Cart"</span>}
+</pre>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 7 — How Everything Connects</h2>
+
+<p>Here is the full flow when a user interacts with a product card:</p>
+
+<table>
+  <tr><th>User Action</th><th>What Happens in Code</th></tr>
+  <tr><td>Hovers over card</td><td>Tailwind <code>group-hover</code> triggers — hover image fades in, Quick View button slides up</td></tr>
+  <tr><td>Clicks a size pill</td><td><code>setSelectedSize(size)</code> called → component re-renders → clicked pill gets dark style</td></tr>
+  <tr><td>Clicks Quick View</td><td><code>e.stopPropagation()</code> runs → <code>setShowModal(true)</code> → AnimatePresence detects child added → modal animates in</td></tr>
+  <tr><td>Clicks backdrop</td><td>backdrop's <code>onClick={onClose}</code> fires → <code>setShowModal(false)</code> → AnimatePresence detects child removed → modal plays exit animation → removed from DOM</td></tr>
+  <tr><td>Clicks inside modal</td><td><code>e.stopPropagation()</code> on modal card → backdrop onClick does NOT fire → modal stays open</td></tr>
+  <tr><td>Presses Escape</td><td>useEffect keydown listener fires → <code>onClose()</code> called → same as clicking backdrop</td></tr>
+  <tr><td>Clicks Add to Cart</td><td><code>addToCart({ ...product, size: selectedSize })</code> → <code>setAdded(true)</code> → button turns green → setTimeout resets after 1.5s</td></tr>
+  <tr><td>Clicks View Full Details</td><td>React Router <code>&lt;Link&gt;</code> navigates to <code>/products/:id</code> → <code>onClose()</code> also called to clean up modal</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<hr />
+<h2>Part 8 — File Summary</h2>
+
+<table>
+  <tr><th>File</th><th>Status</th><th>What it does</th></tr>
+  <tr>
+    <td><code>components/products/QuickViewModal.jsx</code></td>
+    <td>NEW</td>
+    <td>The modal popup. Handles its own Escape key listener, scroll lock, size selection, and add-to-cart feedback.</td>
+  </tr>
+  <tr>
+    <td><code>components/products/ProductCard.jsx</code></td>
+    <td>UPDATED</td>
+    <td>Added showModal state, image hover swap (two stacked images), size pills with toggle, Quick View button with stopPropagation, AnimatePresence wrapping the modal.</td>
+  </tr>
+</table>
+
+<hr />
+<p style="color:#aaa; font-size:9pt; text-align:center;">Arch-Intern Frontend — Feature 1 Documentation &nbsp;|&nbsp; Generated by Amazon Q</p>
+
+</body>
+</html>

@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import MainLayout from "../layouts/MainLayout";
 import ProductGrid from "../components/products/ProductGrid";
-import SearchBar from "../components/products/SearchBar";
-import ProductFilters from "../components/products/ProductFilters";
+import ProductSidebar from "../components/products/ProductSidebar";
 import LoadingSkeleton from "../components/products/LoadingSkeleton";
 import SectionHeader from "../components/ui/SectionHeader";
-import PageWrapper from "../components/ui/PageWrapper";
 import { getProducts } from "../services/ProductService";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [priceRange, setPriceRange] = useState(1000);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     getProducts()
@@ -27,33 +28,72 @@ const Products = () => {
   const filteredProducts = products.filter((p) => {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesPrice = p.price <= priceRange;
+    return matchesSearch && matchesCategory && matchesPrice;
   });
 
   return (
     <MainLayout>
-      <PageWrapper className="space-y-10">
-        <SectionHeader label="Catalogue" title="All Products" subtitle="Browse our latest collection" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-        <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
-          <SearchBar search={search} setSearch={setSearch} />
-          <ProductFilters
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10"
+        >
+          <SectionHeader label="Catalogue" title="All Products" subtitle="Browse our latest collection" />
+        </motion.div>
+
+        <div className="flex gap-8 items-start">
+
+          {/* Sidebar */}
+          <ProductSidebar
+            search={search} setSearch={setSearch}
             categories={categories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
+            selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
+            priceRange={priceRange} setPriceRange={setPriceRange}
+            products={products}
+            mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}
           />
-        </div>
 
-        {error && <p className="text-red-400">{error}</p>}
+          {/* Grid */}
+          <div className="flex-1 min-w-0">
 
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => <LoadingSkeleton key={i} />)}
+            {/* Result count + active filter tag */}
+            <motion.div
+              className="flex items-center justify-between mb-6"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            >
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Showing <span className="font-semibold text-gray-900 dark:text-white">{filteredProducts.length}</span> results
+                {selectedCategory !== "all" && (
+                  <span className="ml-2 inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-400/20 text-amber-700 dark:text-amber-400 text-xs font-medium px-2.5 py-1 rounded-full capitalize">
+                    {selectedCategory}
+                  </span>
+                )}
+              </p>
+            </motion.div>
+
+            {error && <p className="text-red-400 mb-4">{error}</p>}
+
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => <LoadingSkeleton key={i} />)}
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-24 space-y-3">
+                <p className="text-5xl">🔍</p>
+                <p className="font-semibold text-gray-900 dark:text-white text-lg">No products found</p>
+                <p className="text-gray-500 text-sm">Try adjusting your filters or search term</p>
+              </div>
+            ) : (
+              <ProductGrid products={filteredProducts} />
+            )}
           </div>
-        ) : (
-          <ProductGrid products={filteredProducts} />
-        )}
-      </PageWrapper>
+
+        </div>
+      </div>
     </MainLayout>
   );
 };

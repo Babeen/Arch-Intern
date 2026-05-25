@@ -25,6 +25,8 @@ const Signup = lazy(() =>
   import("../pages/Signup")
 );
 
+const Profile = lazy(() => import("../pages/Profile"));
+
 const AppRoutes = () => {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -33,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetails />}/>
         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
