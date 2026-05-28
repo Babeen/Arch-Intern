@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import "./design-system.css";
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* ── Marquee / ticker animation ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
