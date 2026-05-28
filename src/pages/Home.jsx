@@ -51,7 +51,7 @@ const Home = () => {
             New Arrivals — SS 2025
           </motion.p>
           <motion.h1
-            className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight leading-none"
+            className="text-6xl sm:text-8xl lg:text-9xl font-bold tracking-tight leading-none"
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}
           >
             Define Your<br />

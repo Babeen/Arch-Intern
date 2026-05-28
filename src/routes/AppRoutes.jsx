@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import PageLoader from "../components/ui/PageLoader";
+import ScrollToTop from "../components/ui/ScrollToTop";
 
 // Storefront pages
 const Home = lazy(() => import("../pages/Home"));
@@ -11,6 +12,10 @@ const Cart = lazy(() => import("../pages/Cart"));
 const Login = lazy(() => import("../pages/Login"));
 const Signup = lazy(() => import("../pages/Signup"));
 const Profile = lazy(() => import("../pages/Profile"));
+const AboutUs = lazy(() => import("../pages/AboutUs"));
+const ContactUs = lazy(() => import("../pages/ContactUs"));
+const FAQ = lazy(() => import("../pages/FAQ"));
+const Checkout = lazy(() => import("../pages/Checkout"));
 
 // CMS
 const CmsLayout = lazy(() => import("../cms/layouts/CmsLayout"));
@@ -24,15 +29,20 @@ const CmsNewsletter = lazy(() => import("../cms/pages/CmsNewsletter"));
 const AppRoutes = () => {
   return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes>
         {/* Storefront */}
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/faq" element={<FAQ />} />
 
         {/* CMS — protected behind login */}
         <Route path="/cms" element={<ProtectedRoute><CmsLayout /></ProtectedRoute>}>

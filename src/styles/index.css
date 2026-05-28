@@ -2,18 +2,42 @@
 @import "./design-system.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─────────────────────────────────────────────
+   FONT STACK
+   Body / UI  →  Outfit (geometric sans-serif)
+   Display    →  Cormorant Garamond (editorial serif)
+───────────────────────────────────────────── */
+
 body {
-  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
 }
 
-* {
-  scroll-behavior: smooth;
+/* Apply Cormorant Garamond to all heading levels */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.01em;
+}
+
+/* Utility class — use on any element that needs the display font */
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}
+
+/* Utility class — use on any element that needs the sans font */
+.font-sans {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ── Marquee / ticker animation ── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+* {
+  scroll-behavior: smooth;
 }

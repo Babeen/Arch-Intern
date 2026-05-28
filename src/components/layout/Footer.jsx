@@ -60,9 +60,15 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-4">Support</h3>
             <ul className="space-y-2.5">
-              {["Contact Us", "Shipping Info", "Returns", "Size Guide", "Track Order"].map((label) => (
+              {[
+                { label: "Contact Us", path: "/contact" },
+                { label: "FAQ", path: "/faq" },
+                { label: "Shipping Info", path: "/faq" },
+                { label: "Returns", path: "/faq" },
+                { label: "Size Guide", path: "/faq" },
+              ].map(({ label, path }) => (
                 <li key={label}>
-                  <Link to="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <Link to={path} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -73,9 +79,15 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-4">Company</h3>
             <ul className="space-y-2.5">
-              {["About Us", "Careers", "Sustainability", "Privacy Policy", "Terms of Service"].map((label) => (
+              {[
+                { label: "About Us", path: "/about" },
+                { label: "Careers", path: "#" },
+                { label: "Sustainability", path: "#" },
+                { label: "Privacy Policy", path: "#" },
+                { label: "Terms of Service", path: "#" },
+              ].map(({ label, path }) => (
                 <li key={label}>
-                  <Link to="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <Link to={path} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                     {label}
                   </Link>
                 </li>

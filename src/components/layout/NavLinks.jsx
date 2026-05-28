@@ -5,8 +5,8 @@ const navItems = [
   { name: "Shop", path: "/products", exact: true },
   { name: "Men", path: "/products?category=men's clothing" },
   { name: "Women", path: "/products?category=women's clothing" },
-  { name: "Electronics", path: "/products?category=electronics" },
-  { name: "Jewelry", path: "/products?category=jewelery" },
+  { name: "About", path: "/about", exact: true },
+  { name: "Contact", path: "/contact", exact: true },
 ];
 
 const NavLinks = ({ mobile = false, onClick, transparent = false }) => {
@@ -15,10 +15,10 @@ const NavLinks = ({ mobile = false, onClick, transparent = false }) => {
 
   const isActive = (item) => {
     if (item.exact) {
-      // "Home" matches only "/"
-      // "Shop" matches "/products" with NO category param
       if (item.path === "/") return location.pathname === "/";
       if (item.path === "/products") return location.pathname === "/products" && !currentCategory;
+      // Other exact paths (about, contact, faq)
+      return location.pathname === item.path;
     }
     // Category items: pathname must be /products AND category param must match
     const itemCategory = new URLSearchParams(item.path.split("?")[1] || "").get("category");
