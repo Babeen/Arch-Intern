@@ -275,7 +275,7 @@ const Cart = () => {
                 size="lg"
                 onClick={handleCheckout}
                 disabled={selectedIds.size === 0}
-                className="rounded-lg"
+                className="rounded-full"
               >
                 <ShoppingCart className="h-4 w-4" />
                 {selectedIds.size === 0

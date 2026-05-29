@@ -63,8 +63,10 @@ const Navbar = ({ transparent = false }) => {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${getNavbarBackground()}`}>
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
+      {/* Full-width nav container – no max-width constraint */}
+      <nav className="px-4 sm:px-6 lg:px-8 py-4 w-full">
+        <div className="flex items-center justify-between w-full">
+          {/* Logo – fully left */}
           <Link to="/" className="flex items-center shrink-0">
             <img
               src={logo}
@@ -74,10 +76,12 @@ const Navbar = ({ transparent = false }) => {
             />
           </Link>
 
-          <div className="hidden lg:flex">
+          {/* Desktop navigation – centered by flex auto margins */}
+          <div className="hidden lg:flex flex-1 justify-center">
             <NavLinks mobile={false} transparent={!isLightMode} />
           </div>
 
+          {/* Right side icons – fully right */}
           <div className="flex items-center gap-4">
             <Link to="/cart" className="relative group">
               <ShoppingCart

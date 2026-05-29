@@ -37,6 +37,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.4, delay: i * 0.07, ease: "easeOut" } }),
+};
+
 const CmsNewsletter = () => {
   const { content, updateSection, resetSection } = useCms();
   const toast = useToast();
@@ -62,9 +67,9 @@ const CmsNewsletter = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-amber-500 font-semibold mb-1">CMS / Newsletter</p>
@@ -105,9 +110,10 @@ const CmsNewsletter = () => {
 
       {/* Stats */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        custom={1}
         className="grid grid-cols-3 gap-4"
       >
         {[
@@ -127,9 +133,10 @@ const CmsNewsletter = () => {
 
       {/* Subscriber growth chart */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        custom={2}
         className="bg-white dark:bg-[#111118] border border-gray-100 dark:border-white/5 rounded-xl p-6"
       >
         <div className="flex items-center justify-between mb-6">
@@ -167,7 +174,7 @@ const CmsNewsletter = () => {
       </motion.div>
 
       {/* Form */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={3}>
         <CmsFormCard title="Section Copy" description="Edit the text content of the newsletter signup section.">
           <CmsField
             label="Badge"
@@ -201,9 +208,10 @@ const CmsNewsletter = () => {
       {/* Preview */}
       {showPreview && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          custom={4}
           className="bg-white dark:bg-[#111118] border border-gray-100 dark:border-white/5 rounded-xl overflow-hidden"
         >
           <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex items-center gap-2">

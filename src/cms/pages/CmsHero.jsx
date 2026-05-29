@@ -7,6 +7,11 @@ import CmsField from "../components/CmsField";
 import ImageUploadField from "../components/ImageUploadField";
 import { useToast } from "../../context/ToastContext";
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.4, delay: i * 0.07, ease: "easeOut" } }),
+};
+
 const CmsHero = () => {
   const { content, updateSection, resetSection } = useCms();
   const toast = useToast();
@@ -38,10 +43,10 @@ const CmsHero = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-amber-500 font-semibold mb-1">CMS / Hero</p>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hero Section</h1>
@@ -70,9 +75,10 @@ const CmsHero = () => {
 
       {/* Tabs */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        custom={1}
         className="flex gap-1 bg-gray-100 dark:bg-white/5 p-1 rounded-xl w-fit"
       >
         {tabs.map((tab) => (
@@ -93,81 +99,86 @@ const CmsHero = () => {
 
       {/* Tab content */}
       {activeTab === "image" && (
-        <CmsFormCard title="Background Image" description="Recommended: 1920×1080px or wider. Leave blank to use the default.">
-          <ImageUploadField
-            label="Hero Background"
-            value={form.backgroundImage}
-            onChange={(v) => set("backgroundImage", v)}
-            hint="Upload a file or paste a URL."
-          />
-        </CmsFormCard>
+        <motion.div variants={fadeUp} initial="hidden" animate="show" custom={2}>
+          <CmsFormCard title="Background Image" description="Recommended: 1920×1080px or wider. Leave blank to use the default.">
+            <ImageUploadField
+              label="Hero Background"
+              value={form.backgroundImage}
+              onChange={(v) => set("backgroundImage", v)}
+              hint="Upload a file or paste a URL."
+            />
+          </CmsFormCard>
+        </motion.div>
       )}
 
       {activeTab === "copy" && (
-        <CmsFormCard title="Copy & Call-to-Actions" description="Text content and button labels shown on the hero.">
-          <div className="space-y-5">
-            <CmsField
-              label="Badge Text"
-              placeholder="e.g. New Arrivals — SS 2025"
-              value={form.badge}
-              onChange={(e) => set("badge", e.target.value)}
-              hint="Small label displayed above the headline."
-            />
-            <div className="grid sm:grid-cols-2 gap-4">
+        <motion.div variants={fadeUp} initial="hidden" animate="show" custom={2}>
+          <CmsFormCard title="Copy & Call-to-Actions" description="Text content and button labels shown on the hero.">
+            <div className="space-y-5">
               <CmsField
-                label="Headline"
-                placeholder="e.g. Define Your"
-                value={form.heading}
-                onChange={(e) => set("heading", e.target.value)}
+                label="Badge Text"
+                placeholder="e.g. New Arrivals — SS 2025"
+                value={form.badge}
+                onChange={(e) => set("badge", e.target.value)}
+                hint="Small label displayed above the headline."
               />
-              <CmsField
-                label="Headline — italic part"
-                placeholder="e.g. Urban Edge"
-                value={form.headingItalic}
-                onChange={(e) => set("headingItalic", e.target.value)}
-              />
-            </div>
-            <CmsField
-              label="Subheading"
-              textarea
-              rows={2}
-              placeholder="Supporting description text…"
-              value={form.subheading}
-              onChange={(e) => set("subheading", e.target.value)}
-            />
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
-                  <MousePointer className="h-3 w-3" /> Primary CTA
-                </label>
-                <input
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
-                  placeholder="e.g. Shop Now"
-                  value={form.primaryCta}
-                  onChange={(e) => set("primaryCta", e.target.value)}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <CmsField
+                  label="Headline"
+                  placeholder="e.g. Define Your"
+                  value={form.heading}
+                  onChange={(e) => set("heading", e.target.value)}
+                />
+                <CmsField
+                  label="Headline — italic part"
+                  placeholder="e.g. Urban Edge"
+                  value={form.headingItalic}
+                  onChange={(e) => set("headingItalic", e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
-                  <MousePointer className="h-3 w-3" /> Secondary CTA
-                </label>
-                <input
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
-                  placeholder="e.g. Explore Collections"
-                  value={form.secondaryCta}
-                  onChange={(e) => set("secondaryCta", e.target.value)}
-                />
+              <CmsField
+                label="Subheading"
+                textarea
+                rows={2}
+                placeholder="Supporting description text…"
+                value={form.subheading}
+                onChange={(e) => set("subheading", e.target.value)}
+              />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <MousePointer className="h-3 w-3" /> Primary CTA
+                  </label>
+                  <input
+                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+                    placeholder="e.g. Shop Now"
+                    value={form.primaryCta}
+                    onChange={(e) => set("primaryCta", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <MousePointer className="h-3 w-3" /> Secondary CTA
+                  </label>
+                  <input
+                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+                    placeholder="e.g. Explore Collections"
+                    value={form.secondaryCta}
+                    onChange={(e) => set("secondaryCta", e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </CmsFormCard>
+          </CmsFormCard>
+        </motion.div>
       )}
 
       {activeTab === "preview" && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          custom={2}
           className="bg-white dark:bg-[#111118] border border-gray-100 dark:border-white/5 rounded-xl overflow-hidden"
         >
           <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex items-center gap-2">

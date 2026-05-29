@@ -3,6 +3,20 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, ChevronRight } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import Button from "../components/ui/Button";
+import Contactus from "../assets/images/contactus.webp";
+
+// Leaflet imports (free map)
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix default marker icon issue in React Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -17,17 +31,17 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Call Us",
-    lines: ["+1 (800) 555-0199", "Mon–Fri, 9am–6pm EST"],
+    lines: ["+977 (999) 555-0199", "Mon–Fri, 9am–6pm EST"],
   },
   {
     icon: Mail,
     title: "Email Us",
-    lines: ["support@archphaze.com", "We reply within 24 hours"],
+    lines: ["support@velo.com", "We reply within 24 hours"],
   },
   {
     icon: MapPin,
     title: "Visit Us",
-    lines: ["123 Fashion Avenue", "New York, NY 10001"],
+    lines: ["Velo Fashion Avenue", "Kathmandu"],
   },
   {
     icon: Clock,
@@ -65,6 +79,9 @@ const ContactUs = () => {
     setSubmitted(true);
   };
 
+  // Coordinates for your store (update these to your actual location)
+  const storePosition = [27.7172, 85.3240]; // Kathmandu coordinates
+
   return (
     <MainLayout>
       {/* ── Hero ── */}
@@ -72,8 +89,7 @@ const ContactUs = () => {
         <div
           className="absolute inset-0 opacity-15"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 70% 30%, #f59e0b 0%, transparent 55%), radial-gradient(circle at 10% 80%, #f59e0b 0%, transparent 40%)",
+            backgroundImage: `url(${Contactus})`,
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -138,7 +154,7 @@ const ContactUs = () => {
       {/* ── Form + Map ── */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-5 gap-14">
-          {/* Form */}
+          {/* Form Section */}
           <motion.div
             className="lg:col-span-3"
             variants={fadeUp}
@@ -276,7 +292,7 @@ const ContactUs = () => {
             )}
           </motion.div>
 
-          {/* Sidebar */}
+          {/* Sidebar with Map */}
           <motion.div
             className="lg:col-span-2 space-y-6"
             variants={fadeUp}
@@ -285,14 +301,25 @@ const ContactUs = () => {
             viewport={{ once: true }}
             custom={0.2}
           >
-            {/* Map placeholder */}
-            <div className="aspect-video rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden flex items-center justify-center">
-              <div className="text-center text-gray-400 dark:text-gray-600">
-                <MapPin className="h-10 w-10 mx-auto mb-2" />
-                <p className="text-sm font-medium">Map Coming Soon</p>
-                <p className="text-xs mt-1">123 Fashion Avenue, NY</p>
-              </div>
-            </div>
+            {/* Interactive Map - FREE OpenStreetMap */}
+            <MapContainer
+              center={storePosition}
+              zoom={15}
+              scrollWheelZoom={true}
+              className="aspect-video rounded-lg z-0"
+              style={{ background: "#f0f0f0" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={storePosition}>
+                <Popup>
+                  <strong>Velo Fashion Avenue</strong><br />
+                  Kathmandu, Nepal
+                </Popup>
+              </Marker>
+            </MapContainer>
 
             {/* FAQ teaser */}
             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">

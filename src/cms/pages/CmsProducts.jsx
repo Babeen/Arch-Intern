@@ -36,6 +36,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.4, delay: i * 0.07, ease: "easeOut" } }),
+};
+
 const CmsProducts = () => {
   const { content, updateSection, resetSection } = useCms();
   const toast = useToast();
@@ -60,9 +65,9 @@ const CmsProducts = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-amber-500 font-semibold mb-1">CMS / Products</p>
@@ -91,7 +96,7 @@ const CmsProducts = () => {
       </motion.div>
 
       {/* Settings card */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={1}>
         <CmsFormCard title="Section Settings" description="Controls the heading and how many products are shown in the Bestsellers section.">
           <CmsField
             label="Section Label"
@@ -156,9 +161,10 @@ const CmsProducts = () => {
 
       {/* Product performance chart */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        custom={2}
         className="bg-white dark:bg-[#111118] border border-gray-100 dark:border-white/5 rounded-xl p-6"
       >
         <div className="flex items-center gap-3 mb-6">
