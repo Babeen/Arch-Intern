@@ -5,7 +5,7 @@ import { useTheme } from "../../context/ThemeContext";
 import {
   LayoutDashboard, Image, Package, MessageSquare, Tag,
   Mail, LogOut, Menu, X, Sun, Moon, ChevronRight,
-  Bell, Search, ExternalLink,
+  Bell, ExternalLink, Type,
 } from "lucide-react";
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
   { path: "/cms/testimonials", label: "Testimonials", icon: MessageSquare },
   { path: "/cms/promotions", label: "Promotions", icon: Tag },
   { path: "/cms/newsletter", label: "Newsletter", icon: Mail },
+  { path: "/cms/typography", label: "Typography", icon: Type },
 ];
 
 const pageTitles = {
@@ -24,6 +25,7 @@ const pageTitles = {
   "/cms/testimonials": "Testimonials",
   "/cms/promotions": "Promotions",
   "/cms/newsletter": "Newsletter",
+  "/cms/typography": "Typography",
 };
 
 const CmsLayout = () => {

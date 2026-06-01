@@ -1,6 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-// Default CMS content — mirrors what the storefront actually renders
 const defaultContent = {
   hero: {
     badge: "New Arrivals — SS 2025",
@@ -31,6 +30,14 @@ const defaultContent = {
     subheading: "Subscribe for 15% off your first order, early sale access, and members-only drops.",
     buttonText: "Subscribe",
   },
+  typography: {
+    bodyFont: "Outfit",
+    displayFont: "Cormorant Garamond",
+    baseFontSize: "16",
+    headingWeight: "700",
+    bodyWeight: "400",
+    letterSpacing: "normal",
+  },
 };
 
 const CmsContext = createContext();
@@ -39,11 +46,37 @@ export const CmsProvider = ({ children }) => {
   const [content, setContent] = useState(() => {
     try {
       const stored = localStorage.getItem("cms_content");
-      return stored ? { ...defaultContent, ...JSON.parse(stored) } : defaultContent;
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return { ...defaultContent, ...parsed, typography: { ...defaultContent.typography, ...(parsed.typography || {}) } };
+      }
+      return defaultContent;
     } catch {
       return defaultContent;
     }
   });
+
+  // Apply typography to the document root whenever it changes
+  useEffect(() => {
+    const { bodyFont, displayFont, baseFontSize, letterSpacing } = content.typography;
+    const root = document.documentElement;
+    root.style.setProperty("--font-body", `'${bodyFont}', sans-serif`);
+    root.style.setProperty("--font-display", `'${displayFont}', serif`);
+    root.style.setProperty("--font-size-base", `${baseFontSize}px`);
+    root.style.setProperty("--letter-spacing-body", letterSpacing === "wide" ? "0.04em" : letterSpacing === "tight" ? "-0.01em" : "0.01em");
+    document.body.style.fontFamily = `'${bodyFont}', -apple-system, BlinkMacSystemFont, sans-serif`;
+    // Apply display font to headings via a style tag
+    let styleTag = document.getElementById("cms-font-override");
+    if (!styleTag) {
+      styleTag = document.createElement("style");
+      styleTag.id = "cms-font-override";
+      document.head.appendChild(styleTag);
+    }
+    styleTag.textContent = `
+      body { font-family: '${bodyFont}', -apple-system, BlinkMacSystemFont, sans-serif; font-size: ${baseFontSize}px; letter-spacing: ${letterSpacing === "wide" ? "0.04em" : letterSpacing === "tight" ? "-0.01em" : "0.01em"}; }
+      h1, h2, h3, h4, h5, h6 { font-family: '${displayFont}', Georgia, serif; }
+    `;
+  }, [content.typography]);
 
   const updateSection = (section, data) => {
     setContent((prev) => {

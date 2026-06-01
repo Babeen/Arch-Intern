@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, ShoppingCart, User, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, ChevronDown, LayoutDashboard, Heart } from "lucide-react";
 import NavLinks from "./NavLinks";
 import MobileMenu from "./MobileMenu";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/images/logo.png";
 
@@ -23,7 +24,9 @@ const Navbar = ({ transparent = false }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { cart } = useCart();
+  const { wishlist } = useWishlist();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const wishlistCount = wishlist.length;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,7 +86,22 @@ const Navbar = ({ transparent = false }) => {
 
           {/* Right side icons – fully right */}
           <div className="flex items-center gap-4">
-            <Link to="/cart" className="relative group">
+            {/* Wishlist icon */}
+            <Link to="/wishlist" className="relative group" aria-label="Wishlist">
+              <Heart
+                className={`w-5 h-5 transition-colors duration-300 ${
+                  isLightMode ? "text-gray-700 dark:text-white" : "text-white"
+                } ${wishlistCount > 0 ? "fill-red-400 text-red-400" : ""}`}
+              />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-400 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold min-w-[18px] text-center leading-none">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Cart icon */}
+            <Link to="/cart" className="relative group" aria-label="Cart">
               <ShoppingCart
                 className={`w-5 h-5 transition-colors duration-300 ${
                   isLightMode ? "text-gray-700 dark:text-white" : "text-white"

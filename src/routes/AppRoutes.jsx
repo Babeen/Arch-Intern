@@ -16,6 +16,7 @@ const AboutUs = lazy(() => import("../pages/AboutUs"));
 const ContactUs = lazy(() => import("../pages/ContactUs"));
 const FAQ = lazy(() => import("../pages/FAQ"));
 const Checkout = lazy(() => import("../pages/Checkout"));
+const Wishlist = lazy(() => import("../pages/Wishlist"));
 
 // CMS
 const CmsLayout = lazy(() => import("../cms/layouts/CmsLayout"));
@@ -25,6 +26,7 @@ const CmsProducts = lazy(() => import("../cms/pages/CmsProducts"));
 const CmsTestimonials = lazy(() => import("../cms/pages/CmsTestimonials"));
 const CmsPromotions = lazy(() => import("../cms/pages/CmsPromotions"));
 const CmsNewsletter = lazy(() => import("../cms/pages/CmsNewsletter"));
+const CmsTypography = lazy(() => import("../cms/pages/CmsTypography"));
 
 const AppRoutes = () => {
   return (
@@ -43,6 +45,7 @@ const AppRoutes = () => {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/wishlist" element={<Wishlist />} />
 
         {/* CMS — protected behind login */}
         <Route path="/cms" element={<ProtectedRoute><CmsLayout /></ProtectedRoute>}>
@@ -52,6 +55,7 @@ const AppRoutes = () => {
           <Route path="testimonials" element={<CmsTestimonials />} />
           <Route path="promotions" element={<CmsPromotions />} />
           <Route path="newsletter" element={<CmsNewsletter />} />
+          <Route path="typography" element={<CmsTypography />} />
         </Route>
       </Routes>
     </Suspense>
